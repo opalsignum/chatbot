@@ -168,37 +168,26 @@
             cursor: not-allowed;
         }
 
-        /* Fullscreen Loader */
-        #loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(245, 245, 245, 0.95);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(4px);
-        }
-
-        #loader.active {
-            display: flex;
+        /* Inline Loader Message */
+        .message.loader {
+            background: #fafafa;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .loader-content {
-            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid #e0e0e0;
+            width: 24px;
+            height: 24px;
+            border: 3px solid #e0e0e0;
             border-top-color: #333;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
-            margin: 0 auto 16px;
+            flex-shrink: 0;
         }
 
         @keyframes spin {
@@ -206,7 +195,7 @@
         }
 
         .loader-text {
-            font-size: 14px;
+            font-size: 15px;
             color: #666;
             font-weight: 500;
         }
@@ -276,12 +265,6 @@
         </div>
     </div>
 
-    <div id="loader">
-        <div class="loader-content">
-            <div class="spinner"></div>
-            <div class="loader-text">Antwort wird generiert...</div>
-        </div>
-    </div>
 
     <script>
         const app = document.getElementById('app');
@@ -289,9 +272,9 @@
         const composerForm = document.getElementById('composer-form');
         const messageInput = document.getElementById('message-input');
         const sendButton = document.getElementById('send-button');
-        const loader = document.getElementById('loader');
 
         let isFirstMessage = true;
+        let loaderElement = null;
 
         // Form Submit Handler
         composerForm.addEventListener('submit', async (e) => {
@@ -322,12 +305,13 @@
 
             // Kurze Verzögerung, dann Loader anzeigen
             setTimeout(() => {
-                loader.classList.add('active');
+                addLoader();
+                scrollToLatestMessage();
 
                 // Simuliere Bot-Antwort nach 1.5-3 Sekunden
                 const delay = 1500 + Math.random() * 1500;
                 setTimeout(() => {
-                    loader.classList.remove('active');
+                    removeLoader();
 
                     // Bot-Antwort generieren
                     const botResponse = generateBotResponse(messageText);
@@ -357,6 +341,33 @@
             `;
 
             messagesContainer.appendChild(messageDiv);
+            return messageDiv;
+        }
+
+        // Loader-Nachricht hinzufügen
+        function addLoader() {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message loader';
+
+            messageDiv.innerHTML = `
+                <div class="message-label">Assistent</div>
+                <div class="loader-content">
+                    <div class="spinner"></div>
+                    <div class="loader-text">Antwort wird generiert...</div>
+                </div>
+            `;
+
+            messagesContainer.appendChild(messageDiv);
+            loaderElement = messageDiv;
+            return messageDiv;
+        }
+
+        // Loader-Nachricht entfernen
+        function removeLoader() {
+            if (loaderElement) {
+                loaderElement.remove();
+                loaderElement = null;
+            }
         }
 
         // Scroll zur letzten Nachricht
@@ -372,10 +383,73 @@
         // Simulierte Bot-Antworten
         function generateBotResponse(userMessage) {
             const responses = [
-                `Das ist eine interessante Frage zu "${userMessage.substring(0, 30)}...". Basierend auf den verfügbaren Informationen kann ich Ihnen folgendes sagen: Dies ist eine simulierte Antwort, die zeigt, wie der Chat funktioniert. In einer echten Implementierung würde hier eine KI-generierte Antwort erscheinen.`,
-                `Vielen Dank für Ihre Frage. Zu dem Thema "${userMessage.substring(0, 30)}..." gibt es verschiedene Aspekte zu betrachten. Diese Demo zeigt das Verhalten einer Perplexity-ähnlichen Chat-Oberfläche mit automatischem Scrolling und Lade-Animation.`,
-                `Ich verstehe, dass Sie mehr über "${userMessage.substring(0, 30)}..." wissen möchten. In dieser Demo-Version generiere ich Platzhalter-Antworten, um die Funktionalität der Chat-UI zu demonstrieren. Das Layout passt sich dynamisch an und scrollt automatisch zu neuen Nachrichten.`,
-                `Bezüglich "${userMessage.substring(0, 30)}...": Das ist ein spannendes Thema! Diese Oberfläche simuliert das Verhalten von Perplexity mit zentriertem Start-Screen, sticky Composer und Fullscreen-Loader während der Antwort-Generierung.`
+                `Das ist eine äußerst interessante und vielschichtige Frage zu "${userMessage.substring(0, 50)}...". Lassen Sie mich Ihnen eine umfassende Antwort geben, die verschiedene Perspektiven und Aspekte dieses Themas beleuchtet.
+
+Zunächst einmal ist es wichtig zu verstehen, dass dieses Thema in der akademischen und wissenschaftlichen Gemeinschaft ausgiebig diskutiert wurde. Zahlreiche Studien und Forschungsarbeiten haben sich mit den verschiedenen Facetten beschäftigt, und es gibt eine Vielzahl von Meinungen und Ansätzen, die alle ihre Berechtigung haben.
+
+Aus historischer Perspektive betrachtet hat sich das Verständnis dieses Themas im Laufe der Zeit erheblich weiterentwickelt. Was früher als selbstverständlich galt, wird heute oft hinterfragt und aus neuen Blickwinkeln analysiert. Diese Evolution des Denkens spiegelt nicht nur den wissenschaftlichen Fortschritt wider, sondern auch gesellschaftliche Veränderungen und neue technologische Möglichkeiten.
+
+Ein besonders wichtiger Aspekt, den man berücksichtigen sollte, sind die praktischen Anwendungen und realen Auswirkungen. In der Praxis zeigt sich oft, dass theoretische Modelle angepasst werden müssen, um den komplexen Realitäten gerecht zu werden. Dabei spielen Faktoren wie Kontext, kulturelle Unterschiede und individuelle Variablen eine entscheidende Rolle.
+
+Darüber hinaus gibt es interessante interdisziplinäre Verbindungen, die oft übersehen werden. Wenn wir verschiedene Fachbereiche zusammenbringen - sei es Technologie, Sozialwissenschaften, Naturwissenschaften oder Geisteswissenschaften - ergeben sich oft überraschende Einsichten und innovative Lösungsansätze.
+
+Es ist auch erwähnenswert, dass aktuelle Entwicklungen und Trends in diesem Bereich eine dynamische Landschaft schaffen. Was heute als State-of-the-Art gilt, könnte morgen bereits überholt sein. Daher ist es wichtig, kontinuierlich zu lernen und offen für neue Erkenntnisse zu bleiben.
+
+Zusammenfassend lässt sich sagen, dass dieses Thema weitaus komplexer ist, als es auf den ersten Blick erscheinen mag. Die verschiedenen Dimensionen - von theoretischen Grundlagen über praktische Anwendungen bis hin zu zukünftigen Entwicklungen - bilden ein faszinierendes Geflecht von Zusammenhängen, das uns immer wieder neue Erkenntnisse liefert.`,
+
+                `Vielen Dank für Ihre durchdachte Frage zu "${userMessage.substring(0, 50)}...". Dies ist ein Thema, das eine detaillierte und nuancierte Betrachtung verdient, und ich möchte Ihnen eine möglichst umfassende Perspektive bieten.
+
+Wenn wir dieses Thema aus verschiedenen Blickwinkeln betrachten, fällt zunächst auf, dass es mehrere Ebenen des Verständnisses gibt. Auf der oberflächlichsten Ebene mag es einfach erscheinen, aber je tiefer man eintaucht, desto mehr Komplexität offenbart sich. Diese Schichtung ist charakteristisch für viele wichtige Konzepte und macht sie gleichzeitig herausfordernd und faszinierend.
+
+Ein fundamentaler Punkt, den man verstehen muss, ist die historische Entwicklung und wie frühere Generationen mit ähnlichen Fragestellungen umgegangen sind. Die Methoden und Ansätze haben sich im Laufe der Zeit erheblich verändert, nicht nur aufgrund neuer Werkzeuge und Technologien, sondern auch durch veränderte gesellschaftliche Werte und Prioritäten.
+
+In der modernen Betrachtung spielen mehrere Schlüsselfaktoren eine Rolle. Erstens die technologische Komponente: Neue Möglichkeiten der Datenanalyse, Kommunikation und Automatisierung haben völlig neue Perspektiven eröffnet. Zweitens die menschliche Dimension: Wie Menschen mit diesem Thema interagieren, es verstehen und in ihren Alltag integrieren, ist von entscheidender Bedeutung. Drittens die systemische Perspektive: Nichts existiert im Vakuum, und die Wechselwirkungen mit anderen Bereichen sind oft genauso wichtig wie das Thema selbst.
+
+Es gibt auch wichtige ethische und philosophische Überlegungen, die man nicht außer Acht lassen sollte. Fragen nach Verantwortung, Fairness, Nachhaltigkeit und langfristigen Konsequenzen sind integraler Bestandteil jeder fundierten Diskussion. Diese normativen Aspekte beeinflussen nicht nur, wie wir über das Thema denken, sondern auch, welche Entscheidungen wir in der Praxis treffen.
+
+Praktische Beispiele und Fallstudien zeigen uns, wie diese theoretischen Konzepte in der realen Welt angewendet werden. Dabei sehen wir sowohl Erfolgsgeschichten als auch Herausforderungen und Lernmomente. Diese praktischen Erfahrungen sind unschätzbar wertvoll, da sie uns helfen, unsere Ansätze kontinuierlich zu verfeinern und zu verbessern.
+
+Blickt man in die Zukunft, so zeichnen sich bereits jetzt spannende Entwicklungen ab. Neue Forschungsrichtungen, innovative Technologien und veränderte gesellschaftliche Rahmenbedingungen werden das Feld weiter transformieren. Es ist eine aufregende Zeit, in der wir die Möglichkeit haben, aktiv an dieser Gestaltung teilzuhaben.
+
+Abschließend möchte ich betonen, dass kontinuierliches Lernen und kritisches Denken essentiell sind. Die Landschaft verändert sich ständig, und was heute gilt, muss morgen möglicherweise überdacht werden. Eine offene, neugierige Haltung ist der Schlüssel zum Verständnis dieser faszinierenden Thematik.`,
+
+                `Ich verstehe Ihr Interesse an "${userMessage.substring(0, 50)}..." sehr gut. Dies ist ein Themenbereich, der sowohl Tiefe als auch Breite erfordert, um wirklich verstanden zu werden. Lassen Sie mich versuchen, Ihnen eine umfassende und strukturierte Antwort zu geben.
+
+Zunächst sollten wir die grundlegenden Konzepte und Definitionen klären. Oft entstehen Missverständnisse, weil verschiedene Menschen unterschiedliche Vorstellungen von denselben Begriffen haben. Eine klare, präzise Terminologie ist daher der erste Schritt zu einem gemeinsamen Verständnis. In diesem Kontext ist es wichtig, sowohl klassische Definitionen als auch moderne Interpretationen zu berücksichtigen.
+
+Die theoretischen Grundlagen dieses Themas wurden über Jahrzehnte, teilweise sogar Jahrhunderte entwickelt. Verschiedene Denkschulen und wissenschaftliche Traditionen haben ihre eigenen Perspektiven eingebracht, was zu einem reichen Mosaik an Ideen und Ansätzen geführt hat. Manche dieser Ansätze ergänzen sich, andere stehen in produktiver Spannung zueinander - und genau diese Vielfalt macht das Feld so dynamisch.
+
+Wenn wir uns die praktische Umsetzung ansehen, wird deutlich, dass Theorie und Praxis oft in einem komplexen Dialog stehen. Praktiker bringen Erfahrungen aus dem Feld ein, die theoretische Modelle herausfordern und verfeinern. Gleichzeitig bietet die Theorie einen Rahmen, der hilft, praktische Beobachtungen zu interpretieren und zu systematisieren. Diese wechselseitige Befruchtung ist eine der Haupttriebkräfte für Fortschritt.
+
+Ein oft übersehener, aber äußerst wichtiger Aspekt sind die methodologischen Fragen. Wie wir etwas untersuchen, welche Werkzeuge und Techniken wir verwenden, welche Daten wir sammeln und wie wir sie interpretieren - all dies hat fundamentalen Einfluss auf unsere Erkenntnisse. Die Methodologie ist nicht nur ein technisches Detail, sondern prägt maßgeblich, was wir überhaupt sehen und verstehen können.
+
+Die gesellschaftlichen Implikationen sollten ebenfalls nicht unterschätzt werden. Viele Themen haben Auswirkungen, die weit über den akademischen oder technischen Bereich hinausgehen. Sie beeinflussen Politik, Wirtschaft, Kultur und das tägliche Leben von Menschen. Ein verantwortungsvoller Umgang mit diesem Wissen erfordert daher auch ein Bewusstsein für diese breiteren Zusammenhänge.
+
+Aktuelle Forschung und Innovation treiben das Feld kontinuierlich voran. Neue Entdeckungen, verbesserte Technologien und kreative Ansätze eröffnen ständig neue Möglichkeiten. Gleichzeitig werfen sie auch neue Fragen auf und fordern uns heraus, etablierte Annahmen zu überdenken. Dieser Prozess der ständigen Erneuerung ist charakteristisch für lebendige, sich entwickelnde Wissensgebiete.
+
+Interdisziplinäre Verbindungen spielen eine zunehmend wichtige Rolle. Die komplexen Herausforderungen unserer Zeit lassen sich selten innerhalb der Grenzen einer einzelnen Disziplin lösen. Der Dialog zwischen verschiedenen Fachbereichen, das Zusammenbringen unterschiedlicher Perspektiven und Methoden, führt oft zu den innovativsten und nachhaltigsten Lösungen.
+
+Zusammenfassend ist festzuhalten, dass dieses Thema eine faszinierende Mischung aus historischer Entwicklung, theoretischer Fundierung, praktischer Anwendung und zukünftigem Potenzial darstellt. Ein tiefes Verständnis erfordert Geduld, Neugier und die Bereitschaft, verschiedene Perspektiven zu integrieren.`,
+
+                `Ihre Frage zu "${userMessage.substring(0, 50)}..." berührt einen wirklich spannenden und vielschichtigen Themenbereich. Um Ihnen eine fundierte Antwort zu geben, möchte ich verschiedene Dimensionen dieses komplexen Sachverhalts beleuchten.
+
+Beginnen wir mit dem größeren Kontext: Dieses Thema existiert nicht isoliert, sondern ist eingebettet in ein Netzwerk von verwandten Konzepten, historischen Entwicklungen und aktuellen Trends. Um es wirklich zu verstehen, müssen wir diese Verbindungen erkennen und nachvollziehen. Jeder Aspekt beeinflusst die anderen, und erst in ihrer Gesamtheit ergibt sich ein kohärentes Bild.
+
+Die historische Perspektive ist besonders aufschlussreich. Wenn wir zurückblicken, sehen wir, wie sich das Verständnis und die Herangehensweisen im Laufe der Zeit verändert haben. Frühe Pioniere legten Grundsteine, auf denen spätere Generationen aufbauen konnten. Dabei gab es Durchbrüche und Revolutionen im Denken, aber auch Irrwege und Sackgassen, aus denen wichtige Lektionen gelernt wurden.
+
+Aus wissenschaftlicher Sicht gibt es verschiedene theoretische Rahmenwerke, die jeweils ihre eigenen Stärken und Schwächen haben. Manche Ansätze legen den Fokus auf quantitative Analyse und messbare Daten, andere betonen qualitative Aspekte und subjektive Erfahrungen. Wieder andere versuchen, beide Perspektiven zu integrieren. Die Wahl des Ansatzes hängt oft von der spezifischen Fragestellung und dem Kontext ab.
+
+Die praktischen Anwendungen sind außerordentlich vielfältig. In verschiedenen Bereichen - sei es Industrie, Bildung, Gesundheitswesen, oder Technologie - finden wir konkrete Beispiele dafür, wie theoretische Konzepte in die Praxis umgesetzt werden. Dabei zeigt sich oft, dass die Realität komplexer ist als jedes Modell, was zu kreativen Anpassungen und Innovationen führt.
+
+Technologische Entwicklungen haben in den letzten Jahren eine besonders dynamische Rolle gespielt. Neue Werkzeuge und Plattformen ermöglichen Dinge, die früher undenkbar waren. Künstliche Intelligenz, Big Data, Cloud Computing und andere Technologien haben neue Horizonte eröffnet. Gleichzeitig bringen sie auch neue Herausforderungen mit sich, etwa in Bezug auf Datenschutz, Sicherheit und ethische Fragen.
+
+Die menschliche Komponente bleibt trotz aller Technologie zentral. Wie Menschen mit diesem Thema umgehen, welche Bedeutungen sie ihm zuschreiben, welche Emotionen und Erwartungen damit verbunden sind - all dies ist von fundamentaler Bedeutung. User Experience, Akzeptanz, kulturelle Faktoren und individuelle Unterschiede spielen eine entscheidende Rolle für den Erfolg jeder Initiative.
+
+Blicken wir auf die Herausforderungen, so sehen wir ein komplexes Bild. Es gibt technische Hürden, organisatorische Schwierigkeiten, finanzielle Restriktionen und manchmal auch Widerstand gegen Veränderung. Diese Herausforderungen sind real und bedeutsam, aber sie sind auch Gelegenheiten für Innovation und Verbesserung. Oft sind es gerade die schwierigsten Probleme, die zu den kreativsten Lösungen führen.
+
+Die Zukunftsperspektiven sind vielversprechend und herausfordernd zugleich. Trends deuten auf spannende Entwicklungen hin, aber es gibt auch Unsicherheiten und offene Fragen. Was wir heute für wahrscheinlich halten, mag sich morgen als Trugschluss erweisen, während unerwartete Entwicklungen neue Wege eröffnen können. Flexibilität und Anpassungsfähigkeit sind daher wichtige Eigenschaften.
+
+Abschließend lässt sich sagen, dass ein umfassendes Verständnis dieses Themas Zeit, Engagement und die Bereitschaft erfordert, verschiedene Perspektiven zu würdigen. Es ist ein faszinierendes Gebiet, das kontinuierliches Lernen belohnt und immer wieder neue Einsichten bietet.`
             ];
 
             return responses[Math.floor(Math.random() * responses.length)];
